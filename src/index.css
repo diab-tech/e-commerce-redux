@@ -1,0 +1,55 @@
+@import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --background-gradient-start: #1f2937;
+  --background-gradient-end: #4b5563;
+  --card-background: #ffffff;
+  --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --text-primary: #31371f;
+  --text-secondary: #4b5563;
+  /* --text-link: #2563eb;
+  --text-link-hover: #1d4ed8; */
+  --text-error: #ef4444;
+  --button-background: hsl(263, 100%, 78%);
+  --button-background-hover: hsl(263, 100%, 76%);
+  --button-text: #ffffff;
+  --spinner-primary: #3b82f6;
+  --spinner-opacity-low: 0.25;
+  --spinner-opacity-high: 0.75;
+
+  --border-error: #ef4444;
+}
+
+.dark {
+  --background-gradient-start: #111827;
+  --background-gradient-end: #374151;
+  --card-background: #1f2937;
+  --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2), 0 2px 4px -1px rgba(0, 0, 0, 0.12);
+
+  --text-primary: #ffffff;
+  --text-secondary: #d1d5db;
+  /* --text-link: #60a5fa;
+  --text-link-hover: #3b82f6; */
+  --text-error: #f87171;
+  --button-background: hsl(263, 100%, 78%);
+  --button-background-hover: hsl(263, 100%, 67%);
+  --button-text: #ffffff;
+  --spinner-primary: #60a5fa;
+
+  --border-error: #f87171;
+}
+@layer base {
+  ::placeholder {
+    color: gray;
+    font-size: 13px;
+  }
+}
+/* دعم إضافي للـ dark mode */
+.dark .peer-focus:border-indigo-400 {
+  border-color: #818cf8; /* indigo-400 */
+}
+
+.dark .peer-focus:text-indigo-400 {
+  color: #818cf8; /* indigo-400 */
+}
