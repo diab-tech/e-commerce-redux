@@ -7,19 +7,21 @@ interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 // مكون Card
-const Card = forwardRef<HTMLDivElement, CardProps>(({ className, ...props }, ref) => {
-  return (
-    <div
-      ref={ref}
-      className={cn(
-        "rounded-lg border bg-white shadow-sm dark:bg-gray-800 dark:border-gray-700",
-        className,
-      )}
-      role="region"
-      {...props}
-    />
-  );
-});
+const Card = forwardRef<HTMLDivElement, CardProps>(
+  ({ className, ...props }, ref) => {
+    return (
+      <div
+        ref={ref}
+        className={cn(
+          "rounded-lg border border-gray-400 bg-white shadow-sm dark:bg-gray-800 dark:border-gray-600",
+          className
+        )}
+        role="region"
+        {...props}
+      />
+    );
+  }
+);
 
 Card.displayName = "Card";
 

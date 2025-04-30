@@ -14,9 +14,9 @@ const router = createBrowserRouter([
             const { default: Home } = await import("../pages/index");
             return {
               Component: () => (
-                <ProtectedRoute>
-                  <Home />
-                </ProtectedRoute>
+                <Home />
+                // <ProtectedRoute>
+                // </ProtectedRoute>
               ),
             };
           } catch (error) {

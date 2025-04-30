@@ -5,7 +5,8 @@
   --background-gradient-start: #1f2937;
   --background-gradient-end: #4b5563;
   --card-background: #ffffff;
-  --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
   --text-primary: #31371f;
   --text-secondary: #4b5563;
   /* --text-link: #2563eb;
@@ -25,7 +26,8 @@
   --background-gradient-start: #111827;
   --background-gradient-end: #374151;
   --card-background: #1f2937;
-  --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2), 0 2px 4px -1px rgba(0, 0, 0, 0.12);
+  --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2),
+    0 2px 4px -1px rgba(0, 0, 0, 0.12);
 
   --text-primary: #ffffff;
   --text-secondary: #d1d5db;
@@ -45,11 +47,38 @@
     font-size: 13px;
   }
 }
-/* دعم إضافي للـ dark mode */
-.dark .peer-focus:border-indigo-400 {
-  border-color: #818cf8; /* indigo-400 */
+.input-wrapper {
+  position: relative;
+  width: 100%;
 }
 
-.dark .peer-focus:text-indigo-400 {
-  color: #818cf8; /* indigo-400 */
+.input-field {
+  width: 100%;
+  padding: 0.75rem 0.5rem;
+  border-radius: 0.5rem;
+  background: transparent;
+  font-size: 1rem;
+}
+
+.input-label {
+  position: absolute;
+  top: 50%;
+  left: 12px;
+  font-size: 13px;
+  color: #666;
+  background: transparent;
+  backdrop-filter: blur(8px);
+  padding: 0 4px;
+  transform: translateY(-50%);
+  transition: 0.5s ease;
+  pointer-events: none;
+}
+
+.input-field:focus + .input-label,
+.input-field:not(:placeholder-shown) + .input-label {
+  top: -9.5px;
+  font-size: 12px;
+  color: #333;
+  background: #fff;
+  transform: translateY(0);
 }

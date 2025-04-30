@@ -23,12 +23,14 @@ interface AuthState {
   accessToken: string | null;
   loading: boolean;
   error: string | null;
+  successMessage: string | null;
 }
 
 const initialState: AuthState = {
   accessToken: null,
   loading: false,
   error: null,
+  successMessage: null,
 };
 
 export const login = createAsyncThunk<
@@ -38,7 +40,10 @@ export const login = createAsyncThunk<
 >("auth/login", async ({ credentials, navigate }, { rejectWithValue }) => {
   try {
     console.log("Sending login request:", credentials);
-    const response = await axiosInstance.post<AuthResponse>("/auth/login", credentials);
+    const response = await axiosInstance.post<AuthResponse>(
+      "/auth/login",
+      credentials
+    );
     const { access_token } = response.data.data;
     console.log("Login response:", { access_token });
     return { access_token };
@@ -75,10 +80,12 @@ export const register = createAsyncThunk<
       return rejectWithValue(
         errorField === "email" || errorField === "username"
           ? "Username or email is already taken."
-          : "This field must be unique.",
+          : "This field must be unique."
       );
     }
-    return rejectWithValue(error.response?.data?.errors?.[0]?.message || "Failed to register");
+    return rejectWithValue(
+      error.response?.data?.errors?.[0]?.message || "Failed to register"
+    );
   }
 });
 
@@ -88,6 +95,11 @@ const authSlice = createSlice({
   reducers: {
     logout: (state) => {
       state.accessToken = null;
+      state.successMessage = "Logged out successfully";
+    },
+    clearMessages: (state) => {
+      state.successMessage = null;
+      state.error = null;
     },
   },
   extraReducers: (builder) => {
@@ -95,10 +107,12 @@ const authSlice = createSlice({
       .addCase(login.pending, (state) => {
         state.loading = true;
         state.error = null;
+        state.successMessage = null;
       })
       .addCase(login.fulfilled, (state, action) => {
         state.loading = false;
         state.accessToken = action.payload.access_token;
+        state.successMessage = "Logged in successfully";
       })
       .addCase(login.rejected, (state, action) => {
         state.loading = false;
@@ -107,10 +121,12 @@ const authSlice = createSlice({
       .addCase(register.pending, (state) => {
         state.loading = true;
         state.error = null;
+        state.successMessage = null;
       })
       .addCase(register.fulfilled, (state, action) => {
         state.loading = false;
         state.accessToken = action.payload.access_token;
+        state.successMessage = "Registered successfully";
       })
       .addCase(register.rejected, (state, action) => {
         state.loading = false;
@@ -119,5 +135,5 @@ const authSlice = createSlice({
   },
 });
 
-export const { logout } = authSlice.actions;
+export const { logout, clearMessages } = authSlice.actions;
 export default authSlice.reducer;

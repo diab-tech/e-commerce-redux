@@ -1,31 +1,51 @@
 import { NavLink, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { RootState } from "../app/store";
-import { logout } from "../app/features/counter/authSlice";
-import { setTheme } from "../app/features/counter/themeSlice"; // استبدل toggleTheme بـ setTheme
+import { logout, clearMessages } from "../app/features/counter/authSlice";
+import { setTheme } from "../app/features/counter/themeSlice";
+import { debounce } from "lodash-es";
+
+import toast from "react-hot-toast";
 
 const Navbar: React.FC = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const theme = useSelector((state: RootState) => state.theme.theme);
-  const accessToken = useSelector((state: RootState) => state.auth.accessToken);
+  const { accessToken, successMessage } = useSelector(
+    (state: RootState) => state.auth
+  );
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
-  const handleLogout = () => {
-    dispatch(logout());
-    navigate("/login");
-  };
+  const debouncedLogout = useCallback(
+    debounce(() => {
+      dispatch(logout());
+      navigate("/login");
+    }, 300),
+    [dispatch, navigate]
+  );
+
+  useEffect(() => {
+    if (successMessage && successMessage.includes("Logged out")) {
+      toast.success(successMessage, {
+        className:
+          "bg-blue-600 dark:bg-blue-500 text-white rounded-md shadow-lg p-4",
+        position: "top-center",
+        duration: 4000,
+        style: { width: "fit-content" },
+      });
+      dispatch(clearMessages());
+    }
+  }, [successMessage, dispatch]);
 
   const handleThemeSelect = (selectedTheme: "light" | "dark" | "system") => {
     if (selectedTheme !== theme) {
-      console.log(`Changing theme from ${theme} to ${selectedTheme}`); // لوج للتصحيح
-      dispatch(setTheme(selectedTheme)); // استخدم setTheme بدل toggleTheme
+      console.log(`Changing theme from ${theme} to ${selectedTheme}`);
+      dispatch(setTheme(selectedTheme));
     }
     setIsDropdownOpen(false);
   };
 
-  // تحديد نص الزر بناءً على الثيم الحالي
   const getThemeLabel = () => {
     switch (theme) {
       case "light":
@@ -35,13 +55,13 @@ const Navbar: React.FC = () => {
       case "system":
         return "⚙️ System";
       default:
-        return "⚙️ System"; // افتراضي
+        return "⚙️ System";
     }
   };
 
   return (
     <nav className="bg-white dark:bg-gray-800 text-[var(--text-primary)] dark:text-white py-2 px-6 shadow-md">
-      <div className="flex justify-end ">
+      <div className="flex justify-end">
         <ul className="flex gap-4 list-none">
           {accessToken && (
             <li>
@@ -49,7 +69,7 @@ const Navbar: React.FC = () => {
                 to="/"
                 className={({ isActive }) =>
                   isActive
-                    ? " underline cursor-pointer"
+                    ? "underline cursor-pointer"
                     : "text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-500 cursor-pointer"
                 }
               >
@@ -60,8 +80,8 @@ const Navbar: React.FC = () => {
           {accessToken && (
             <li>
               <button
-                onClick={handleLogout}
-                className="bg-blue-600 dark:bg-blue-500 hover:bg-blue-700 dark:hover:bg-blue-600  px-4 py-2 rounded-md transition-colors cursor-pointer"
+                onClick={debouncedLogout}
+                className="bg-blue-600 dark:bg-blue-500 hover:bg-blue-700 dark:hover:bg-blue-600 px-4 py-2 rounded-md transition-colors cursor-pointer"
               >
                 Logout
               </button>
@@ -70,7 +90,7 @@ const Navbar: React.FC = () => {
           <li className="relative">
             <button
               onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-              className="bg-gradient-to-br from-fuchsia-300 to-indigo-400 dark:bg-gradient-to-br dark:from-gray-100 dark:to-gray-700  text-white px-4 py-2 rounded-md transition-colors cursor-pointer flex items-center gap-2"
+              className="bg-gradient-to-br from-fuchsia-300 to-indigo-400 dark:bg-gradient-to-br dark:from-gray-100 dark:to-gray-700 text-white px-4 py-2 rounded-md transition-colors cursor-pointer flex items-center gap-2"
               aria-label="Toggle theme"
               aria-expanded={isDropdownOpen}
             >
