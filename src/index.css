@@ -2,11 +2,10 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-  --background-gradient-start: #1f2937;
-  --background-gradient-end: #4b5563;
+  --background-gradient-start: #ffffff;
+  --background-gradient-end: #e9d0e7;
   --card-background: #ffffff;
-  --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
-    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
   --text-primary: #31371f;
   --text-secondary: #4b5563;
   /* --text-link: #2563eb;
@@ -18,32 +17,35 @@
   --spinner-primary: #3b82f6;
   --spinner-opacity-low: 0.25;
   --spinner-opacity-high: 0.75;
+  --label-background: #fff;
+    --label-shadow: box-shadow:
+    0 0 20px #fff;
 
   --border-error: #ef4444;
 }
 
 .dark {
-  --background-gradient-start: #111827;
+  --background-gradient-start: #808183;
   --background-gradient-end: #374151;
   --card-background: #1f2937;
-  --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2),
-    0 2px 4px -1px rgba(0, 0, 0, 0.12);
+  --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2), 0 2px 4px -1px rgba(0, 0, 0, 0.12);
 
   --text-primary: #ffffff;
   --text-secondary: #d1d5db;
-  /* --text-link: #60a5fa;
-  --text-link-hover: #3b82f6; */
+  --text-link: #60a5fa;
+  --text-link-hover: #3b82f6;
   --text-error: #f87171;
   --button-background: hsl(263, 100%, 78%);
-  --button-background-hover: hsl(263, 100%, 67%);
+  --button-background-hover: hsl(263, 100%, 76%);
   --button-text: #ffffff;
   --spinner-primary: #60a5fa;
-
+  --label-background: #1f2937;
+  --label-shadow: box-shadow:
+    0 0 20px #1f2937;
   --border-error: #f87171;
 }
 @layer base {
   ::placeholder {
-    color: gray;
     font-size: 13px;
   }
 }
@@ -65,20 +67,21 @@
   top: 50%;
   left: 12px;
   font-size: 13px;
-  color: #666;
   background: transparent;
   backdrop-filter: blur(8px);
   padding: 0 4px;
   transform: translateY(-50%);
   transition: 0.5s ease;
   pointer-events: none;
+    color: var(--text-secondary);
+
 }
 
 .input-field:focus + .input-label,
 .input-field:not(:placeholder-shown) + .input-label {
   top: -9.5px;
   font-size: 12px;
-  color: #333;
-  background: #fff;
+  color: var(--text-primary);
+  background: var(--label-background);
   transform: translateY(0);
 }

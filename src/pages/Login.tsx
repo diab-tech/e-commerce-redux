@@ -21,9 +21,7 @@ const Login: React.FC = () => {
     from: { pathname: "/" },
     error: null,
   };
-  const { loading, error, successMessage } = useAppSelector(
-    (state) => state.auth
-  );
+  const { loading, error, successMessage } = useAppSelector((state) => state.auth);
 
   const {
     register,
@@ -60,8 +58,7 @@ const Login: React.FC = () => {
         position: "top-center",
         duration: 4000,
         style: { width: "fit-content" },
-        className:
-          "bg-red-500 dark:bg-red-400 text-white rounded-md shadow-lg p-4",
+        className: "bg-red-500 dark:bg-red-400 text-white rounded-md shadow-lg p-4",
       });
       dispatch(clearMessages());
     }
@@ -86,15 +83,9 @@ const Login: React.FC = () => {
     >
       <Card className="w-full max-w-md bg-[var(--card-background)] shadow-lg">
         <CardContent className="p-8">
-          <form
-            onSubmit={handleSubmit(onSubmit)}
-            className="space-y-6"
-            aria-busy={isLoading}
-          >
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6" aria-busy={isLoading}>
             <div className="text-center">
-              <h1 className="text-3xl font-bold dark:text-white">
-                Welcome Back
-              </h1>
+              <h1 className="text-3xl font-bold dark:text-white">Welcome Back</h1>
               <p className="mt-2 text-sm text-gray-600 dark:text-gray-300">
                 Log in to your account
               </p>
@@ -105,9 +96,7 @@ const Login: React.FC = () => {
                 type="email"
                 aria-label="Email"
                 {...register("email")}
-                className={
-                  errors.email ? "border-red-500 dark:border-red-500" : ""
-                }
+                className={errors.email ? "border-red-500 dark:border-red-500" : ""}
                 aria-invalid={!!errors.email}
                 aria-describedby={errors.email ? "email-error" : undefined}
               />
@@ -125,9 +114,7 @@ const Login: React.FC = () => {
                   {...register("password")}
                   className={errors.password ? "border-red-500" : ""}
                   aria-invalid={!!errors.password}
-                  aria-describedby={
-                    errors.password ? "password-error" : undefined
-                  }
+                  aria-describedby={errors.password ? "password-error" : undefined}
                 />
                 {errors.password && (
                   <p id="password-error" className="text-red-500 text-sm">
@@ -150,7 +137,7 @@ const Login: React.FC = () => {
                 className="text-blue-600 hover:text-blue-800 underline underline-offset-4"
                 aria-label="Sign up"
               >
-                Sign up
+                {` Sign up`}
               </Link>
             </p>
           </form>

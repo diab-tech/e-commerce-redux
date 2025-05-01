@@ -14,13 +14,31 @@ const router = createBrowserRouter([
             const { default: Home } = await import("../pages/index");
             return {
               Component: () => (
-                <Home />
-                // <ProtectedRoute>
-                // </ProtectedRoute>
+                <ProtectedRoute>
+                  <Home />
+                </ProtectedRoute>
               ),
             };
           } catch (error) {
             console.error("Failed to load Home:", error);
+            throw error;
+          }
+        },
+      },
+      {
+        path: "cart",
+        lazy: async () => {
+          try {
+            const { default: Cart } = await import("../components/Cart");
+            return {
+              Component: () => (
+                <ProtectedRoute>
+                  <Cart />
+                </ProtectedRoute>
+              ),
+            };
+          } catch (error) {
+            console.error("Failed to load Cart:", error);
             throw error;
           }
         },

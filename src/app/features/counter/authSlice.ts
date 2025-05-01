@@ -40,10 +40,7 @@ export const login = createAsyncThunk<
 >("auth/login", async ({ credentials, navigate }, { rejectWithValue }) => {
   try {
     console.log("Sending login request:", credentials);
-    const response = await axiosInstance.post<AuthResponse>(
-      "/auth/login",
-      credentials
-    );
+    const response = await axiosInstance.post<AuthResponse>("/auth/login", credentials);
     const { access_token } = response.data.data;
     console.log("Login response:", { access_token });
     return { access_token };
@@ -80,12 +77,10 @@ export const register = createAsyncThunk<
       return rejectWithValue(
         errorField === "email" || errorField === "username"
           ? "Username or email is already taken."
-          : "This field must be unique."
+          : "This field must be unique.",
       );
     }
-    return rejectWithValue(
-      error.response?.data?.errors?.[0]?.message || "Failed to register"
-    );
+    return rejectWithValue(error.response?.data?.errors?.[0]?.message || "Failed to register");
   }
 });
 
@@ -95,7 +90,7 @@ const authSlice = createSlice({
   reducers: {
     logout: (state) => {
       state.accessToken = null;
-      state.successMessage = "Logged out successfully";
+      state.successMessage = "Logged out successfully!";
     },
     clearMessages: (state) => {
       state.successMessage = null;
@@ -112,7 +107,7 @@ const authSlice = createSlice({
       .addCase(login.fulfilled, (state, action) => {
         state.loading = false;
         state.accessToken = action.payload.access_token;
-        state.successMessage = "Logged in successfully";
+        state.successMessage = "Logged in successfully!";
       })
       .addCase(login.rejected, (state, action) => {
         state.loading = false;
@@ -126,7 +121,7 @@ const authSlice = createSlice({
       .addCase(register.fulfilled, (state, action) => {
         state.loading = false;
         state.accessToken = action.payload.access_token;
-        state.successMessage = "Registered successfully";
+        state.successMessage = "Registered successfully! Now login to access";
       })
       .addCase(register.rejected, (state, action) => {
         state.loading = false;

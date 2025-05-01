@@ -19,7 +19,7 @@ createRoot(document.getElementById("root")!).render(
           className: "rounded-md shadow-lg p-4",
           style: {
             borderRadius: "8px",
-            padding: "16px",
+            // padding: "16px",
             fontSize: "16px",
           },
           duration: 3000,
@@ -33,5 +33,5 @@ createRoot(document.getElementById("root")!).render(
       />
       <RouterProvider router={router} />
     </QueryClientProvider>
-  </Provider>
+  </Provider>,
 );
