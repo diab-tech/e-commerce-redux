@@ -27,7 +27,7 @@ interface AuthState {
 }
 
 const initialState: AuthState = {
-  accessToken: null,
+  accessToken: localStorage.getItem("access_token") || null,
   loading: false,
   error: null,
   successMessage: null,
@@ -41,8 +41,9 @@ export const login = createAsyncThunk<
   try {
     console.log("Sending login request:", credentials);
     const response = await axiosInstance.post<AuthResponse>("/auth/login", credentials);
+
     const { access_token } = response.data.data;
-    console.log("Login response:", { access_token });
+    console.log("Login response:", { access_token }); 
     return { access_token };
   } catch (error: any) {
     console.error("Login API error:", error.response?.data || error.message);
@@ -67,6 +68,7 @@ export const register = createAsyncThunk<
       status: "active",
     });
     const { access_token } = response.data.data;
+    localStorage.setItem("access_token", access_token);
     console.log("Register response:", { access_token });
     return { access_token };
   } catch (error: any) {
@@ -90,11 +92,14 @@ const authSlice = createSlice({
   reducers: {
     logout: (state) => {
       state.accessToken = null;
+      localStorage.removeItem("access_token");
       state.successMessage = "Logged out successfully!";
+      state.loading= true;
     },
     clearMessages: (state) => {
       state.successMessage = null;
       state.error = null;
+      state.loading= false;
     },
   },
   extraReducers: (builder) => {
@@ -107,6 +112,7 @@ const authSlice = createSlice({
       .addCase(login.fulfilled, (state, action) => {
         state.loading = false;
         state.accessToken = action.payload.access_token;
+        localStorage.setItem("access_token", action.payload.access_token);
         state.successMessage = "Logged in successfully!";
       })
       .addCase(login.rejected, (state, action) => {

@@ -1,16 +1,8 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-
-interface CartItem {
-  id: number;
-  title: string;
-  price: number;
-  quantity: number;
-  image: string;
-  description: string;
-}
+import { ICartItem } from "../../../interface";
 
 interface CartState {
-  items: CartItem[];
+  items: ICartItem[];
   total: number;
   loading: boolean;
   successMessage: string | null;
@@ -29,19 +21,11 @@ const cartSlice = createSlice({
   name: "cart",
   initialState,
   reducers: {
-    addToCart: (
-      state,
-      action: PayloadAction<{
-        id: number;
-        title: string;
-        price: number;
-        image: string;
-        description: string;
-        quantity?: number;
-      }>,
-    ) => {
+    addToCart: (state, action: PayloadAction<ICartItem>) => {
       state.loading = true;
+
       const { id, title, price, image, description, quantity = 1 } = action.payload;
+
       const existingItem = state.items.find((item) => item.id === id);
       if (existingItem) {
         existingItem.quantity += quantity;

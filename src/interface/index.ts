@@ -1,8 +1,16 @@
-export interface CartItem {
+export interface ICartItem {
   id: number;
   title: string;
   price: number;
+  image: string;
+  description: string;
   quantity: number;
+}
+export interface Product {
+  id: number;
+  title: string;
+  price: number;
+  description: string;
   image: string;
 }
 

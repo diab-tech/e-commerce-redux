@@ -13,45 +13,80 @@ interface ErrorResponse {
   message: string;
 }
 
-// إنشاء instance من axios
-const axiosInstance = axios.create({
+// axiosPublic.ts
+export const axiosPublic = axios.create({
   baseURL: "http://localhost:8055",
-  withCredentials: true, // دعم إرسال واستقبال الـ cookies
   headers: {
     "Content-Type": "application/json",
   },
+  timeout: 10000, // 10 seconds timeout
 });
 
-// Interceptor للردود
-axiosInstance.interceptors.response.use(
+// Add response interceptor to axiosPublic for better error handling
+axiosPublic.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    // Handle request cancellation gracefully
+    if (axios.isCancel(error)) {
+      console.log('Request cancelled:', error.message);
+      return Promise.reject(error);
+    }
+    
+    // Network errors
+    if (!error.response) {
+      return Promise.reject(new Error('Network error: Please check your connection'));
+    }
+    
+    // HTTP error responses
+    return Promise.reject(error);
+  }
+);
+
+// axiosPrivate.ts
+export const axiosPrivate = axios.create({
+  baseURL: "http://localhost:8055",
+  headers: {
+    "Content-Type": "application/json",
+  },
+  withCredentials: true,
+  timeout: 10000,
+});
+
+// 👉 لتخزين navigate واستخدامه لاحقًا
+let navigateFn: NavigateFunction | null = null;
+let sessionExpired = false;
+
+export const wasSessionExpired = () => sessionExpired;
+
+export const setNavigate = (navigate: NavigateFunction) => {
+  navigateFn = navigate;
+};
+
+// Interceptor
+axiosPrivate.interceptors.response.use(
   (response: AxiosResponse) => response,
-  async (error: AxiosError<ErrorResponse>, navigate?: NavigateFunction) => {
+  async (error: AxiosError<ErrorResponse>) => {
     const originalRequest = error.config as AxiosRequestConfig & { _retry?: boolean };
 
-    // التعامل مع خطأ 401 (انتهاء صلاحية التوكن)
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
       try {
-        // طلب تحديث التوكن
-        const res = await axiosInstance.post<AuthResponse>("/auth/refresh");
+        const res = await axiosPrivate.post<AuthResponse>("/auth/refresh");
         const { access_token } = res.data.data;
 
-        // تحديث الـ headers للطلب الأصلي
         originalRequest.headers = originalRequest.headers || {};
         originalRequest.headers.Authorization = `Bearer ${access_token}`;
 
-        // إعادة محاولة الطلب الأصلي
-        return axiosInstance(originalRequest);
+        return axiosPrivate(originalRequest);
       } catch (refreshError) {
-        // إذا فشل تحديث التوكن، إعادة التوجيه إلى صفحة تسجيل الدخول
-        if (navigate) {
-          navigate("/login");
+        sessionExpired = true;
+        if (navigateFn) {
+          navigateFn("/login");
         }
         return Promise.reject(refreshError);
       }
     }
 
-    // معالجة أخطاء أخرى
     if (error.response?.status === 500) {
       return Promise.reject(new Error("خطأ في الخادم، حاول لاحقًا"));
     }
@@ -60,7 +95,7 @@ axiosInstance.interceptors.response.use(
     }
 
     return Promise.reject(error);
-  },
+  }
 );
 
-export default axiosInstance;
+export default axiosPrivate;

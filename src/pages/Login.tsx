@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useAppDispatch, useAppSelector } from "../hooks";
@@ -17,10 +17,17 @@ const Login: React.FC = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const location = useLocation();
-  const { from, error: routeError } = location.state || {
-    from: { pathname: "/" },
-    error: null,
-  };
+
+  const from = useMemo(() => {
+    const stateFromLocation = location.state as { from?: Location; error?: string } || {};
+    return stateFromLocation.from || { pathname: "/" };
+  }, [location.state]);
+
+  const routeError = useMemo(() => {
+    const stateFromLocation = location.state as { from?: Location; error?: string } || {};
+    return stateFromLocation.error || null;
+  }, [location.state]);
+
   const { loading, error, successMessage } = useAppSelector((state) => state.auth);
 
   const {
@@ -78,7 +85,7 @@ const Login: React.FC = () => {
 
   return (
     <div
-      style={{ height: "calc(100vh - 56px)" }}
+      style={{ height: "calc(100vh - 52px)" }}
       className="flex items-center justify-center bg-gradient-to-br from-fuchsia-300 to-indigo-400 dark:bg-gradient-to-br dark:from-gray-700 dark:to-gray-900 p-6"
     >
       <Card className="w-full max-w-md bg-[var(--card-background)] shadow-lg">

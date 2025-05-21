@@ -3,7 +3,7 @@ import cartSlice from "./features/counter/cartSlice";
 
 import authSlice from "./features/counter/authSlice";
 import themeReducer from "./features/counter/themeSlice";
-
+import productsSlice from "./features/counter/products/productsSlice";
 export type RootState = ReturnType<typeof store.getState>;
 
 export type AppDispatch = typeof store.dispatch;
@@ -14,6 +14,7 @@ const store = configureStore({
     auth: authSlice,
     cart: cartSlice,
     theme: themeReducer,
+    products: productsSlice,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
