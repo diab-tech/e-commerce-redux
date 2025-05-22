@@ -24,11 +24,11 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
     return <LoadingSpinner />;
   }
 
-  if (!accessToken || wasSessionExpired()) {
+  if (accessToken && wasSessionExpired()) {
     return (
       <Navigate
         to="/login"
-        state={{ from: location, error: "جلسة المستخدم انتهت، سجل دخول من جديد" }}
+        state={{ from: location, error: "Your session has expired, please login again" }}
         replace
       />
     );

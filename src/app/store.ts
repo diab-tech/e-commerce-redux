@@ -3,7 +3,7 @@ import cartSlice from "./features/counter/cartSlice";
 
 import authSlice from "./features/counter/authSlice";
 import themeReducer from "./features/counter/themeSlice";
-import productsSlice from "./features/counter/products/productsSlice";
+import { productsApiSlice } from "./features/counter/products/productsApiSlice";
 export type RootState = ReturnType<typeof store.getState>;
 
 export type AppDispatch = typeof store.dispatch;
@@ -14,12 +14,12 @@ const store = configureStore({
     auth: authSlice,
     cart: cartSlice,
     theme: themeReducer,
-    products: productsSlice,
+    [productsApiSlice.reducerPath]: productsApiSlice.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: false, // تعطيل فحص التسلسل لتجنب مشاكل مع الـ cookies
-    }),
+    }).concat(productsApiSlice.middleware),
 });
 
 export default store;
